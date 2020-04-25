@@ -1,25 +1,36 @@
-const http = require('http');
-const server = http.createServer((req,res)=>{
-    if(req.url==='/'){
-        res.write("Hello");
-        res.end();
-    }else if(req.url==='/api/good'){
-        res.write("Nagraj");
-        res.end();
-    }else if(req.url==='/api/fruits'){
-        res.write(JSON.stringify([1,2,3,4,5,6,7,8,9]));
-        res.end();
-    }else{
-        res.write("wrong api");
-        res.end();
-    }
+//libraries
+const express = require("express");
+const logger = require("morgan");
+const fs = require("fs");
+const path = require("path");
 
+// constants
+const port = process.env.PORT || 3000;
+
+//asignments
+const app = express();
+app.use("/data", express.static(__dirname.concat("/data")));
+app.use(logger("dev"));
+
+// app assignment
+app.use(express.json());
+
+//db
+const { Pool, Client } = require("pg");
+const pool = new Pool({
+  user: "postgres",
+  host: "localhost",
+  database: "postgres",
+  password: "@nagraj",
+  port: 5432,
 });
-var noc=0;
-server.listen(3000);
-console.log('Listening at 3000...');
-server.on('connection',(hello)=>{
-    noc++;
-    console.log("there are "+noc+" connetion..");
+
+//port listening
+app.listen(port, function () {
+  console.log("MySelf app requests are beeing listening on port =>", port);
 });
+
+
+
+
 
